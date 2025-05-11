@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: order_service_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - order_mongo_data:/data/db
+    restart: always
+
+  order-service:
+    build: .
+    container_name: order_service_app
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongo
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/order_db
+
+volumes:
+  order_mongo_data:
