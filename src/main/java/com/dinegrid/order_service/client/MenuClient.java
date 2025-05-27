@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 public class MenuClient {
     private final RestTemplate restTemplate;
 
-    public MenuItemResponse getMenuItem(String menuItemId) {
+    public MenuItemResponse getMenuItem(long menuItemId) {
       String url = "http://menu-service:8082/api/v1/menu/" + menuItemId;
 //        String url = "http://host.docker.internal:8082/api/v1/menu/" + menuItemId;
         return restTemplate.getForObject(url, MenuItemResponse.class);

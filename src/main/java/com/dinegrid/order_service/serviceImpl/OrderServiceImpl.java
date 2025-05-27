@@ -30,6 +30,8 @@ public class OrderServiceImpl implements OrderService {
 
     private final UserClient userClient;
 
+    private final OrderEventProducer orderEventProducer;
+
     @Override
     public OrderResponse placeOrder(OrderRequest request) {
         log.info("Placing order: {}", request);
@@ -38,9 +40,8 @@ public class OrderServiceImpl implements OrderService {
 //            throw new RuntimeException("User not found");
 //        }
 
-      MenuItemResponse item = menuClient.getMenuItem(request.getMenuItemId());
-//        MenuItemResponse item = new MenuItemResponse();
-//        item.setPrice(5d);
+        MenuItemResponse item = menuClient.getMenuItem(request.getMenuItemId());
+
         if (item == null || !item.getAvailable()) {
             throw new RuntimeException("Menu Item not available");
         }
@@ -52,6 +53,8 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("PLACED");
 
         order = orderRepository.save(order);
+
+        orderEventProducer.publishOrderPlacedEvent(order);
 
         return orderMapper.toResponse(order);
     }

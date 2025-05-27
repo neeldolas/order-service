@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class OrderRequest {
     private String userId;
-    private String menuItemId;
+    private Long menuItemId;
     private int quantity;
 }
